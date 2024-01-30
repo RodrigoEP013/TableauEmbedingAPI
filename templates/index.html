@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Token</title>
+    <script type="module">
+        import {
+            TableauAuthoringViz,
+            TableauEventType,
+            TableauViz
+        } from 'https://prod-useast-b.online.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js';
+
+        const viz = new TableauAuthoringViz();
+
+        window.onload = function() {
+            fetch('/get_newWorkbook')
+                .then(response => response.json())
+                .then(data => {
+                    const token = data.token;
+                    const workbookName = data.workbook_name; // Obtener el nombre del nuevo libro
+                    let url = `https://prod-useast-b.online.tableau.com/t/egosbi/authoring/${workbookName}/Sheet1`; // Construir la URL correcta
+                    console.log(url);
+
+                    // Configurar la visualización
+                    viz.token = token;
+                    viz.hideCloseButton = true;
+                    viz.toolbar = "hidden";
+                    viz.height = "800";
+                    viz.width = "1200";
+                    viz.src = url;
+
+                    // Agregar la visualización al elemento HTML
+                    document.getElementById('new-workbook').appendChild(viz);
+                })
+                .catch(error => console.error('Error:', error));
+        };
+
+    </script>
+</head>
+<body>
+    <h2>This is an empty workbook</h2>
+    <div id="new-workbook"></div> <!-- Cambié el ID para que coincida con el script JS -->
+    <!-- Contenido HTML de tu página -->
+</body>
+</html>
